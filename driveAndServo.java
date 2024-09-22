@@ -1,5 +1,4 @@
 
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
- 
 
 
 @TeleOp(name = "YA4", group = "LinearOpMode")
@@ -19,7 +17,7 @@ public class YA4 extends LinearOpMode {
     private DcMotor backleftDrive = null;
     private DcMotor frontrightDrive = null;
     private DcMotor backrightDrive = null;
-//    Servo hookR;
+    Servo hookR = null;
     Servo hookL = null;
 
 
@@ -31,7 +29,7 @@ public class YA4 extends LinearOpMode {
         backrightDrive = hardwareMap.get(DcMotor.class, "br");
         
         hookL = hardwareMap.get(Servo.class, "leftHangerServo");
-        
+        hookR = hardwareMap.get(Servo.class, "intake");
         frontleftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontrightDrive.setDirection(DcMotor.Direction.FORWARD);
         backleftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -71,26 +69,26 @@ public class YA4 extends LinearOpMode {
             frontleftDrive.setPower(flpower);
             backleftDrive.setPower(blpower);
           
-         // if (gamepad1.y){
+        //  if (gamepad1.y){
               
-         //      hookL.setPosition(0);
+        //       hookL.setPosition(0);
               
-         //  } 
+        //   } 
           
-         //  else if(gamepad1.x){
-         //      hookL.setPosition(0.7);
+        //   else if(gamepad1.x){
+        //       hookL.setPosition(0.7);
               
-         //  }
+        //   }
           
-         //  else if(gamepad1.a){
+        //   else if(gamepad1.a){
               
-         //      hookL.setPosition(1);
+        //       hookL.setPosition(1);
               
-         //  }
+        //   }
 
          
             movearm();
-            
+            moveintakearm();
             
             telemetry.addData("Status", "Running");
             telemetry.update();
@@ -108,12 +106,15 @@ public class YA4 extends LinearOpMode {
         else if(gamepad1.b ){
             hookL.setPosition(0.5);
         }
-        else if(gamepad1.a){
-            hookL.setPosition(0.5);
-        }
-        else if(gamepad1.x){
-            hookL.setPosition(0);
-        }
+        
      }
-}
+     public void moveintakearm(){
+         if (gamepad1.a){
+            hookR.setPosition(0);
+        }
+        else if(gamepad1.x ){
+            hookR.setPosition(0.5);
+        }
+        
+     }
 }
