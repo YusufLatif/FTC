@@ -21,7 +21,7 @@ public class YA4 extends LinearOpMode {
     private DcMotor backrightDrive = null;
     Servo hookR = null;
     Servo hookL = null;
-
+    double kp = 0.5;
 
     @Override
     public void runOpMode() {
@@ -121,6 +121,7 @@ public class YA4 extends LinearOpMode {
      }
      public double PIDController(double target, double current){
         double error = target - current; 
+        error *= kp
         return error;
      }
 }
