@@ -1,4 +1,5 @@
 
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
+ 
 
 
 @TeleOp(name = "YA4", group = "LinearOpMode")
@@ -64,10 +66,10 @@ public class YA4 extends LinearOpMode {
                 blpower /= maxPower;
             }
             
-            frontrightDrive.setPower(frpower);
-            backrightDrive.setPower(brpower);
-            frontleftDrive.setPower(flpower);
-            backleftDrive.setPower(blpower);
+            // frontrightDrive.setPower(frpower);
+            // backrightDrive.setPower(brpower);
+            // frontleftDrive.setPower(flpower);
+            // backleftDrive.setPower(blpower);
           
         //  if (gamepad1.y){
               
@@ -116,5 +118,9 @@ public class YA4 extends LinearOpMode {
             hookR.setPosition(0.5);
         }
         
+     }
+     public double PIDController(double target, double current){
+        double error = target - current; 
+        return error;
      }
 }
