@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  
 
 
-@TeleOp(name = "YA4", group = "LinearOpMode")
+@Autonomous(name = "YA4", group = "LinearOpMode")
 
 public class YA4 extends LinearOpMode {
     private DcMotor frontleftDrive = null;
@@ -22,7 +22,11 @@ public class YA4 extends LinearOpMode {
     Servo hookR = null;
     Servo hookL = null;
     double kp = 0.5;
-
+    double ki = 0.5;
+    double kd = 0.5;
+    ElapsedTime totalTime = new ElapsedTime();
+    double integralSum = 0;
+    
     @Override
     public void runOpMode() {
         frontleftDrive = hardwareMap.get(DcMotor.class, "fl");
@@ -45,7 +49,7 @@ public class YA4 extends LinearOpMode {
         double drive, turn, strafe;
         double flpower, frpower, blpower, brpower;
         waitForStart();
-
+        
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             
@@ -120,8 +124,14 @@ public class YA4 extends LinearOpMode {
         
      }
      public double PIDController(double target, double current){
-        double error = target - current; 
-        error *= kp
+        double properror = target - current; 
+        integralSum += properror * totalTime.time();
+        totalTime.reset();
+
+        
+        double error = kp * properror + integralSum * ki; 
+        
         return error;
      }
+ 
 }
