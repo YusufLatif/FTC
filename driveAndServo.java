@@ -26,7 +26,8 @@ public class YA4 extends LinearOpMode {
     double kd = 0.5;
     ElapsedTime totalTime = new ElapsedTime();
     double integralSum = 0;
-    
+    double derivative = 0;
+    double properror = 0;
     @Override
     public void runOpMode() {
         frontleftDrive = hardwareMap.get(DcMotor.class, "fl");
@@ -124,12 +125,13 @@ public class YA4 extends LinearOpMode {
         
      }
      public double PIDController(double target, double current){
-        double properror = target - current; 
+        properror = target - current; 
         integralSum += properror * totalTime.time();
+        derivative *= properror/totalTime.time();
         totalTime.reset();
 
         
-        double error = kp * properror + integralSum * ki; 
+        double error = kp * properror + integralSum * ki + derivative * kd; 
         
         return error;
      }
