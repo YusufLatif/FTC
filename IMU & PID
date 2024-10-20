@@ -1,0 +1,103 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+@Autonomous
+
+public class YusufA2 {
+    private DcMotor frontleftDrive = null;
+    private DcMotor backleftDrive = null;
+    private DcMotor frontrightDrive = null;
+    private DcMotor backrightDrive = null;
+    Servo hookR = null;
+    Servo hookL = null;
+    double kp = 0.5;
+    double ki = 0.5;
+    double kd = 0.5;
+    ElapsedTime totalTime = new ElapsedTime();
+    double integralSum = 0;
+    double derivative = 0;
+    double properror = 0;
+ IMU imu;
+
+
+
+    @Override public void runOpMode() throws InterruptedException {
+        frontleftDrive = hardwareMap.get(DcMotor.class, "fl");
+        frontrightDrive = hardwareMap.get(DcMotor.class, "fr");
+        backleftDrive = hardwareMap.get(DcMotor.class, "bl");
+        backrightDrive = hardwareMap.get(DcMotor.class, "br");
+    
+        frontleftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontrightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backleftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backrightDrive.setDirection(DcMotor.Direction.FORWARD);
+        
+        imu = hardwareMap.get(IMU.class, "imu");
+
+        
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+       
+        while (!isStopRequested()) {
+
+            telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", logoDirection, usbDirection);
+
+            // Check to see if heading reset is requested
+            if (gamepad1.y) {
+                telemetry.addData("Yaw", "Resetting\n");
+                imu.resetYaw();
+            } else {
+                telemetry.addData("Yaw", "Press Y (triangle) on Gamepad to reset\n");
+            }
+
+            
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+
+            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES));
+            telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES));
+            telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES));
+            telemetry.addData("Yaw (Z) velocity", "%.2f Deg/Sec", angularVelocity.zRotationRate);
+            telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", angularVelocity.xRotationRate);
+            telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec", angularVelocity.yRotationRate);
+            telemetry.update();
+        }
+        
+    }
+    public double PIDController(double target, double current){
+        properror = target - current; 
+        integralSum += properror * totalTime.time();
+        derivative *= properror/totalTime.time();
+        totalTime.reset();
+
+        
+        double error = kp * properror + integralSum * ki + derivative * kd; 
+        
+        return error;
+     }
+    public double anglerap(double degrees) {
+        while (degrees > 180){
+            degrees -= 360;
+        }
+        while (degrees < 180){
+            degrees += 360;
+        }
+        return degrees;
+       }
+        
+      }
