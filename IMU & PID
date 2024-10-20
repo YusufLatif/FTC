@@ -48,13 +48,13 @@ public class YusufAIMU1 {
 
         
         //RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-       // RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        // RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
 
-       double xRotation = 0; 
-       double yRotation = 0;
-       double zRotation = 0;
+        double xRotation = 0; 
+        double yRotation = 0;
+        double zRotation = 0;
 
-
+        Orientation hubRotation = xyzOrientation(xRotation, yRotation, zRotation);
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(hubRotation);
 
